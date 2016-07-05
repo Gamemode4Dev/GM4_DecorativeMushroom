@@ -23,7 +23,7 @@ public class HoldAxe implements Listener {
 	{
 		Player player = event.getPlayer();
 		
-		if(player.getInventory().getItem(event.getPreviousSlot()).getItemMeta().hasEnchant(Enchantment.SILK_TOUCH))
+		if(!(player.getInventory().getItem(event.getPreviousSlot()).equals(null)) && player.getInventory().getItem(event.getPreviousSlot()).getItemMeta().hasEnchant(Enchantment.SILK_TOUCH))
 		{
 			if(!(player.getInventory().getItem(event.getNewSlot()).getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)))
 			{

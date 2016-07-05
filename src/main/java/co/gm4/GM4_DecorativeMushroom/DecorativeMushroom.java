@@ -26,8 +26,8 @@ public class DecorativeMushroom extends JavaPlugin {
 	
 	public static String[] bookPhrases = {"east","north","northeast","northwest","south","southeast","southwest","west","inside","allstem","stem"};
 	
-	public ArrayList<UUID> activatedPlayers;
-	public HashMap<UUID, String> activationPhrase;
+	public ArrayList<UUID> activatedPlayers = new ArrayList<>();
+	public HashMap<UUID, String> activationPhrase = new HashMap<>();
 	
 	//TODO: Tellraw messages
 	public String activationMessage = "Decorative Mushrooms has been activated!";
@@ -57,7 +57,7 @@ public class DecorativeMushroom extends JavaPlugin {
 		}
 	}
 	
-	public boolean isValidBook(ItemStack book, Player player)
+	public boolean isValidBook(ItemStack book, UUID uuid)
 	{
 		if(!(book.getType().equals(Material.BOOK_AND_QUILL)))
 		{
@@ -76,13 +76,14 @@ public class DecorativeMushroom extends JavaPlugin {
 		if(bookMeta.getPageCount() > 1)
 			return false;
 		
-		String text = bookMeta.getPage(0);
+		String text = bookMeta.getPages().get(0);
 		
 		for(int i = 0; i < DecorativeMushroom.bookPhrases.length; i++)
 		{
 			if(text.equalsIgnoreCase(DecorativeMushroom.bookPhrases[i]))
 			{
-				this.activationPhrase.put(player.getUniqueId(), bookPhrases[i]);
+				
+				this.activationPhrase.put(uuid, bookPhrases[i]);
 				return true;
 			}
 		}
@@ -97,7 +98,7 @@ public class DecorativeMushroom extends JavaPlugin {
 		boolean validBook = false;
 		for(ItemStack i : books)
 		{
-			if(isValidBook(i, player))
+			if(isValidBook(i, player.getUniqueId()))
 			{
 				validBook = true;
 				break;
