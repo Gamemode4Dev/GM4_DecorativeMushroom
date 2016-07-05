@@ -1,5 +1,6 @@
 package co.gm4.GM4_DecorativeMushroom.events;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -19,6 +20,8 @@ public class BookDrop implements Listener {
 	@EventHandler
 	public void onBookDrop(PlayerDropItemEvent event)
 	{
-		//TODO: Deactivation message if the item was the only valid book and quill in the inventory.
+		Player player = event.getPlayer();
+		
+		plugin.validateItem(player);
 	}
 }

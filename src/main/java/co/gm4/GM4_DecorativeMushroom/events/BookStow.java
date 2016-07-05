@@ -1,8 +1,13 @@
 package co.gm4.GM4_DecorativeMushroom.events;
 
+import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemStack;
 
 import co.gm4.GM4_DecorativeMushroom.DecorativeMushroom;
 
@@ -17,9 +22,25 @@ public class BookStow implements Listener {
 	}
 	
 	@EventHandler
-	public void onInventoryInteract(InventoryInteractEvent event)
+	public void onInventoryInteract(InventoryClickEvent event)
 	{
-		//TODO: If the player adds a valid book and quill to his or her inventory, send the activation message.
-		//TODO: If the player removes the only valid book and quill from his or her inventory, send the deactivation message.
+		HumanEntity who = event.getWhoClicked();
+		if(!(who instanceof Player)) return;
+		Player player = (Player) who;
+		
+		ItemStack currentItem = event.getCurrentItem();
+		if(!(currentItem.equals(null)))
+		{
+			if(currentItem.getType().equals(Material.BOOK_AND_QUILL))
+			{
+				plugin.validateItem(player);
+			}
+			return;
+		}
+		
+		if(!(event.getInventory().getType().equals(InventoryType.PLAYER)) && event.getView().getItem(event.getRawSlot()).getType().equals(Material.BOOK_AND_QUILL))
+		{
+			plugin.validateItem(player);
+		}
 	}
 }

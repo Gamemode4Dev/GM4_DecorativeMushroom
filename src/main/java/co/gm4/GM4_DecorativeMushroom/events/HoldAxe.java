@@ -1,5 +1,7 @@
 package co.gm4.GM4_DecorativeMushroom.events;
 
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -19,6 +21,20 @@ public class HoldAxe implements Listener {
 	@EventHandler
 	public void onPlayerHeldChange(PlayerItemHeldEvent event)
 	{
-		//TODO: Activate / Deactivate depending on if the player has a silk axe.
+		Player player = event.getPlayer();
+		
+		if(player.getInventory().getItem(event.getPreviousSlot()).getItemMeta().hasEnchant(Enchantment.SILK_TOUCH))
+		{
+			if(!(player.getInventory().getItem(event.getNewSlot()).getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)))
+			{
+				plugin.validateItem(player);
+			}
+			return;
+		}
+		
+		if(player.getInventory().getItem(event.getNewSlot()).getItemMeta().hasEnchant(Enchantment.SILK_TOUCH))
+		{
+			plugin.validateItem(player);
+		}
 	}
 }

@@ -1,5 +1,7 @@
 package co.gm4.GM4_DecorativeMushroom.events;
 
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -19,7 +21,12 @@ public class BookPickup implements Listener {
 	@EventHandler
 	public void onBookPickup(PlayerPickupItemEvent event)
 	{
-		//TODO: Activation message if the item is a valid book and quill.
+		Player player = event.getPlayer();
+		
+		if(!(event.getItem().getItemStack().getType().equals(Material.BOOK_AND_QUILL)))
+			return;
+		
+		plugin.validateItem(player);
 	}
 	
 }
