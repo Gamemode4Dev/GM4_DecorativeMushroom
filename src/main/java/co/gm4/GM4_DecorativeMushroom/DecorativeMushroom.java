@@ -1,13 +1,11 @@
 package co.gm4.GM4_DecorativeMushroom;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -26,13 +24,8 @@ public class DecorativeMushroom extends JavaPlugin {
 	
 	public static String[] bookPhrases = {"east","north","northeast","northwest","south","southeast","southwest","west","inside","allstem","stem"};
 	
-	public ArrayList<UUID> activatedPlayers = new ArrayList<>();
 	public HashMap<UUID, String> activationPhrase = new HashMap<>();
-	
-	//TODO: Tellraw messages
-	public String activationMessage = "Decorative Mushrooms has been activated!";
-	public String deactivationMessage = "Decorative Mushrooms has been deactivated!";
-	
+	 
 	@Override
 	public void onEnable()
 	{
@@ -48,13 +41,7 @@ public class DecorativeMushroom extends JavaPlugin {
 	@Override
 	public void onDisable()
 	{
-		for(int i = 0; i < activatedPlayers.size(); i++)
-		{
-			for(Player p : Bukkit.getServer().getOnlinePlayers())
-			{
-				this.deactivate(p);
-			}
-		}
+
 	}
 	
 	public boolean isValidBook(ItemStack book, UUID uuid)
@@ -92,71 +79,19 @@ public class DecorativeMushroom extends JavaPlugin {
 	
 	public void validateItem(Player player)
 	{
+		if(this.activationPhrase.containsKey(player.getUniqueId()))
+		{
+			this.activationPhrase.remove(player.getUniqueId());
+		}
+		
 		PlayerInventory inv = player.getInventory();
 		Collection<? extends ItemStack> books = inv.all(Material.BOOK_AND_QUILL).values();
 		
-		boolean validBook = false;
 		for(ItemStack i : books)
 		{
 			if(isValidBook(i, player.getUniqueId()))
 			{
-				validBook = true;
 				break;
-			}
-		}
-		
-		if(!validBook)
-		{
-			deactivate(player);
-		}
-		
-		ItemStack tool = inv.getItemInMainHand();
-		if(tool.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH))
-		{
-			activate(player);
-			return;
-		}
-		
-		deactivate(player);
-	}
-	
-	private void activate(Player player)
-	{
-		this.activate(player, true);
-	}
-	
-	private void activate(Player player, boolean message)
-	{
-		if(!(this.activatedPlayers.contains(player.getUniqueId())))
-		{
-			this.activatedPlayers.add(player.getUniqueId());
-			
-			if(message)
-			{
-				//TODO: Tellraw support
-				player.sendMessage(activationMessage);
-			}
-		}
-	}
-	
-	private void deactivate(Player player)
-	{
-		this.deactivate(player, true);
-	}
-	
-	private void deactivate(Player player, boolean message)
-	{
-		if(this.activatedPlayers.contains(player.getUniqueId()))
-		{
-			this.activatedPlayers.remove(player.getUniqueId());
-			this.activatedPlayers.trimToSize();
-			
-			this.activationPhrase.remove(player.getUniqueId());
-			
-			if(message)
-			{
-				//TODO: Tellraw support
-				player.sendMessage(deactivationMessage);
 			}
 		}
 	}
