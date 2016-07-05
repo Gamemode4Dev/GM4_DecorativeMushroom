@@ -1,12 +1,16 @@
 package co.gm4.GM4_DecorativeMushroom;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,9 +24,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class DecorativeMushroom extends JavaPlugin {
 	
-	public static String[] bookPhrases = {};
+	public static String[] bookPhrases = {"east","north","northeast","northwest","south","southeast","southwest","west","inside","allstem","stem"};
 	
 	public ArrayList<UUID> activatedPlayers;
+	public HashMap<UUID, String> activationPhrase;
 	
 	//TODO: Tellraw messages
 	public String activationMessage = "Decorative Mushrooms has been activated!";
@@ -52,7 +57,7 @@ public class DecorativeMushroom extends JavaPlugin {
 		}
 	}
 	
-	public static boolean isValidBook(ItemStack book)
+	public boolean isValidBook(ItemStack book, Player player)
 	{
 		if(!(book.getType().equals(Material.BOOK_AND_QUILL)))
 		{
@@ -73,10 +78,11 @@ public class DecorativeMushroom extends JavaPlugin {
 		
 		String text = bookMeta.getPage(0);
 		
-		for(int i = 0; i < bookPhrases.length; i++)
+		for(int i = 0; i < DecorativeMushroom.bookPhrases.length; i++)
 		{
 			if(text.equalsIgnoreCase(DecorativeMushroom.bookPhrases[i]))
 			{
+				this.activationPhrase.put(player.getUniqueId(), bookPhrases[i]);
 				return true;
 			}
 		}
@@ -85,7 +91,32 @@ public class DecorativeMushroom extends JavaPlugin {
 	
 	public void validateItem(Player player)
 	{
-		//TODO: Search inventory for a book and quill and axe and act accordingly.
+		PlayerInventory inv = player.getInventory();
+		Collection<? extends ItemStack> books = inv.all(Material.BOOK_AND_QUILL).values();
+		
+		boolean validBook = false;
+		for(ItemStack i : books)
+		{
+			if(isValidBook(i, player))
+			{
+				validBook = true;
+				break;
+			}
+		}
+		
+		if(!validBook)
+		{
+			deactivate(player);
+		}
+		
+		ItemStack tool = inv.getItemInMainHand();
+		if(tool.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH))
+		{
+			activate(player);
+			return;
+		}
+		
+		deactivate(player);
 	}
 	
 	private void activate(Player player)
@@ -118,6 +149,8 @@ public class DecorativeMushroom extends JavaPlugin {
 		{
 			this.activatedPlayers.remove(player.getUniqueId());
 			this.activatedPlayers.trimToSize();
+			
+			this.activationPhrase.remove(player.getUniqueId());
 			
 			if(message)
 			{
