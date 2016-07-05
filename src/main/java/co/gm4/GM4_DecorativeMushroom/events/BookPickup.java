@@ -1,6 +1,7 @@
 package co.gm4.GM4_DecorativeMushroom.events;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,7 +24,7 @@ public class BookPickup implements Listener {
 	{
 		Player player = event.getPlayer();
 		
-		if(!(event.getItem().getItemStack().getType().equals(Material.BOOK_AND_QUILL)))
+		if(!(event.getItem().getItemStack().getType().equals(Material.BOOK_AND_QUILL)) && !(event.getItem().getItemStack().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)))
 			return;
 		
 		plugin.validateItem(player);

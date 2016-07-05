@@ -1,6 +1,7 @@
 package co.gm4.GM4_DecorativeMushroom.events;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,7 +32,7 @@ public class BookStow implements Listener {
 		ItemStack currentItem = event.getCurrentItem();
 		if(!(currentItem.equals(null)))
 		{
-			if(currentItem.getType().equals(Material.BOOK_AND_QUILL))
+			if(currentItem.getType().equals(Material.BOOK_AND_QUILL) || currentItem.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH))
 			{
 				plugin.validateItem(player);
 			}
@@ -39,6 +40,12 @@ public class BookStow implements Listener {
 		}
 		
 		if(!(event.getInventory().getType().equals(InventoryType.PLAYER)) && event.getView().getItem(event.getRawSlot()).getType().equals(Material.BOOK_AND_QUILL))
+		{
+			plugin.validateItem(player);
+			return;
+		}
+		
+		if(event.getView().getItem(event.getRawSlot()).getItemMeta().hasEnchant(Enchantment.SILK_TOUCH))
 		{
 			plugin.validateItem(player);
 		}

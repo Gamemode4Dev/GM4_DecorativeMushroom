@@ -3,10 +3,10 @@ package co.gm4.GM4_DecorativeMushroom;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,7 +32,10 @@ public class DecorativeMushroom extends JavaPlugin {
 	public void onEnable()
 	{
 		//TODO: Config and achievements
-		//TODO: Test for activation at start up.
+		for(Player p : Bukkit.getServer().getOnlinePlayers())
+		{
+			this.validateItem(p);
+		}
 		
 		new InstantiateEvents(this);
 	}
@@ -40,7 +43,13 @@ public class DecorativeMushroom extends JavaPlugin {
 	@Override
 	public void onDisable()
 	{
-		//TODO: Tell all activated players that it is deactivated now.
+		for(int i = 0; i < activatedPlayers.size(); i++)
+		{
+			for(Player p : Bukkit.getServer().getOnlinePlayers())
+			{
+				this.deactivate(p);
+			}
+		}
 	}
 	
 	public static boolean isValidBook(ItemStack book)
@@ -77,5 +86,44 @@ public class DecorativeMushroom extends JavaPlugin {
 	public void validateItem(Player player)
 	{
 		//TODO: Search inventory for a book and quill and axe and act accordingly.
+	}
+	
+	private void activate(Player player)
+	{
+		this.activate(player, true);
+	}
+	
+	private void activate(Player player, boolean message)
+	{
+		if(!(this.activatedPlayers.contains(player.getUniqueId())))
+		{
+			this.activatedPlayers.add(player.getUniqueId());
+			
+			if(message)
+			{
+				//TODO: Tellraw support
+				player.sendMessage(activationMessage);
+			}
+		}
+	}
+	
+	private void deactivate(Player player)
+	{
+		this.deactivate(player, true);
+	}
+	
+	private void deactivate(Player player, boolean message)
+	{
+		if(this.activatedPlayers.contains(player.getUniqueId()))
+		{
+			this.activatedPlayers.remove(player.getUniqueId());
+			this.activatedPlayers.trimToSize();
+			
+			if(message)
+			{
+				//TODO: Tellraw support
+				player.sendMessage(deactivationMessage);
+			}
+		}
 	}
 }

@@ -1,5 +1,7 @@
 package co.gm4.GM4_DecorativeMushroom.events;
 
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,6 +23,8 @@ public class BookDrop implements Listener {
 	public void onBookDrop(PlayerDropItemEvent event)
 	{
 		Player player = event.getPlayer();
+		
+		if(event.getItemDrop().getItemStack().getType().equals(Material.BOOK_AND_QUILL) || event.getItemDrop().getItemStack().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH))
 		
 		plugin.validateItem(player);
 	}
