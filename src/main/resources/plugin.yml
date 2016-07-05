@@ -1,4 +1,4 @@
 name: GM4_DecorativeMushroom
-main: co.gm4.GM4_UndeadPlayers.DecorativeMushroom
+main: co.gm4.GM4_DecorativeMushroom.DecorativeMushroom
 author: OSX
 version: 0.0.1-SNAPSHOT
